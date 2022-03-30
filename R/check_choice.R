@@ -9,6 +9,8 @@
 #'         If the choice is a number but is not within the length range of the choice the return value will be FALSE.
 #'         If the choices argument is not a character vector with a length of at least one then the program will stop.
 #'
+#' @noRd
+#'
 #' @examples
 #'
 #' \dontrun{
@@ -23,27 +25,31 @@
 check_choice <- function(choices, choice) {
 
   if (length(choices) == 0) {
-    stop("Error: The character vector length requirs to be one or greate than one.")
+    stop("Error: The character vector length requirs to be one or greate than one.", call. = FALSE)
   }
 
   if (is.list(choices)) {
-    stop("Error: A list was used in the argument.  Only a character vector can be used.")
+    stop("Error: A list was used in the argument.  Only a character vector can be used.", call. = FALSE)
   }
 
   if (class(choices) != "character") {
-    stop("Error: A non character vector was passed as an argument.")
+    stop("Error: A non character vector was passed as an argument.", call. = FALSE)
   }
 
-  choice <- as.numeric(gsub("[^1-9]", 0, choice))
+  # grepl will return false if a non numeric character is in the string.
+  if (!grepl("[^0-9]", choice)) {
 
-  if (is.numeric(choice)) {
+    choice <- as.numeric(choice)
 
-    max_number_choice <- length(choices)
+    if (is.numeric(choice)) {
 
-    if (choice >= 1 & choice <= max_number_choice) {
+      max_number_choice <- length(choices)
 
-      return(TRUE)
+      if (choice >= 1 & choice <= max_number_choice) {
 
+        return(TRUE)
+
+      }
     }
   }
 
